@@ -11,6 +11,7 @@ const photosSrc = [
 	'./i/IAC.jpg',
 	'./i/new-museum.jpg'
 ];
+const sourcesNumber = photosSrc.length;
 let index = 0;
 currentPhoto.src = photosSrc[index];
 
@@ -20,11 +21,11 @@ prevButton.onclick = prevPhoto;
 
 
 function nextPhoto() {
-	index = (index + 1) % 5;
+	index = (index + 1) % sourcesNumber;
 	currentPhoto.src = photosSrc[index];
 }
 
 function prevPhoto() {
-	index = (index + 4) % 5;
+	index = (index + sourcesNumber - 1) % sourcesNumber;
 	currentPhoto.src = photosSrc[index];
 }

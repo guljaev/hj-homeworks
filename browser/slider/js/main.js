@@ -1,28 +1,14 @@
 'use strict';
 
 const prodImage = document.getElementById('slider');
-prodImage.src = './i/airmax.png';
+const prodImageSources = ['./i/airmax-jump.png', './i/airmax-on-foot.png', './i/airmax-playground.png', './i/airmax-top-view.png', './i/airmax.png'];
 let count = 0;
+prodImage.src = prodImageSources[count];
+
 
 const timerId = setInterval(() => {
-	switch(count % 5) {
-		case 0:
-			prodImage.src = './i/airmax-jump.png';
-			break;
-		case 1:
-			prodImage.src = './i/airmax-on-foot.png';
-			break;
-		case 2:
-			prodImage.src = './i/airmax-playground.png';
-			break;
-		case 3:
-			prodImage.src = './i/airmax-top-view.png';
-			break;
-		case 4:
-			prodImage.src = './i/airmax.png';
-			break;
-	}
-
+	const sourcesNumber = prodImageSources.length;
+	prodImage.src = prodImageSources[++count % sourcesNumber];
 	count++;
 }, 5000)
 
