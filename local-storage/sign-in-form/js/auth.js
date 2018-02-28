@@ -9,8 +9,6 @@ formSignIn.addEventListener('submit', (event) => {
     const formData = new FormData(formSignIn);
 
     requestSignIn.addEventListener('load', () => {
-        // console.log(requestSignIn.response);
-        // console.log(requestSignIn.status);
         treatServerAnswer(formSignIn, requestSignIn);
     });
     requestSignIn.open('POST', 'https://neto-api.herokuapp.com/signin');
@@ -44,6 +42,19 @@ formSignIn.addEventListener('submit', (event) => {
     // Наверное мы это будем изучать позже?
 });
 
+formSignUp.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const requestSignUp = new XMLHttpRequest();
+    const formData = new FormData(formSignUp);
+
+    requestSignUp.addEventListener('load', () => {
+        treatServerAnswer(formSignUp, requestSignUp);
+    });
+    requestSignUp.open('POST', 'https://neto-api.herokuapp.com/signup');
+    requestSignUp.setRequestHeader('Content-Type', 'application/json');
+    requestSignUp.send(JSON.stringify(formData));
+});
+
 
 function treatServerAnswer(form, request) {
     try {
@@ -55,7 +66,11 @@ function treatServerAnswer(form, request) {
         if (resp.error) {
             form.querySelector('.error-message').value = resp.message;
         } else {
-            form.querySelector('.error-message').value = `Пользователь ${resp.name} успешно авторизован`;
+            if (form === formSignIn) {
+                form.querySelector('.error-message').value = `Пользователь ${resp.name} успешно авторизован`;
+            } else {
+                form.querySelector('.error-message').value = `Пользователь ${resp.name} успешно зарегистрирован`;
+            }
         }
 
     } catch (err) {
