@@ -7,13 +7,20 @@ formSignIn.addEventListener('submit', (event) => {
     event.preventDefault();
     const requestSignIn = new XMLHttpRequest();
     const formData = new FormData(formSignIn);
+    // почему запрос console.log(formData) выдает пустой объект FormData, хотя в нем по факту содержится 3 пары значений???
+    let fd = {};
+    for (const [key, value] of formData) {
+        fd[key] = value;
+    }
+    // console.log(fd);
+    // console.dir(formData);
 
     requestSignIn.addEventListener('load', () => {
         treatServerAnswer(formSignIn, requestSignIn);
     });
     requestSignIn.open('POST', 'https://neto-api.herokuapp.com/signin');
     requestSignIn.setRequestHeader('Content-Type', 'application/json');
-    requestSignIn.send(JSON.stringify(formData));
+    requestSignIn.send(JSON.stringify(fd));
 
     // const request = fetch('https://neto-api.herokuapp.com/signin', {
     //     body: JSON.stringify(formData),
@@ -46,13 +53,17 @@ formSignUp.addEventListener('submit', (event) => {
     event.preventDefault();
     const requestSignUp = new XMLHttpRequest();
     const formData = new FormData(formSignUp);
+    let fd = {};
+    for (const [key, value] of formData) {
+        fd[key] = value;
+    }
 
     requestSignUp.addEventListener('load', () => {
         treatServerAnswer(formSignUp, requestSignUp);
     });
     requestSignUp.open('POST', 'https://neto-api.herokuapp.com/signup');
     requestSignUp.setRequestHeader('Content-Type', 'application/json');
-    requestSignUp.send(JSON.stringify(formData));
+    requestSignUp.send(JSON.stringify(fd));
 });
 
 
@@ -65,15 +76,23 @@ function treatServerAnswer(form, request) {
 
         if (resp.error) {
             form.querySelector('.error-message').value = resp.message;
-        } else {
-            if (form === formSignIn) {
-                form.querySelector('.error-message').value = `Пользователь ${resp.name} успешно авторизован`;
-            } else {
-                form.querySelector('.error-message').value = `Пользователь ${resp.name} успешно зарегистрирован`;
-            }
+            // console.log(resp);
+            throw new Error(resp.message);
         }
 
+        // console.log(resp);
+        if (form === formSignIn) {
+            form.querySelector('.error-message').value = `Пользователь ${resp.name} успешно авторизован`;
+        } else {
+            form.querySelector('.error-message').value = `Пользователь ${resp.name} успешно зарегистрирован`;
+        }
+        
     } catch (err) {
         console.log('Произошла ошибка:' + err);
     }
 }
+
+// Вопросы:
+// 1. Почему запрос console.log(formData) выдает пустой объект FormData, хотя в нем по факту содержатся значения из формы (т.к. дальше они попадают в объект fd)?
+// 2. Почему нужно отправлять на сервер fd, а не formData? В реальной практике тоже обычно сначала из объекта FormData делают обычный Object и его уже отправляют? Или могут опправлять на сервер исходный объект FormData?
+// 3. Почему при запросе через fetch я получаю не такой же ответ, как через XMLHttpRequest и как с ним работать?
