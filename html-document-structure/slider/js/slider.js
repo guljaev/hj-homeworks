@@ -30,59 +30,57 @@ const lastButton = sliderNav.querySelector('[data-action=last]');
 //     updateSliderNav();    
 // });
 
+prevButton.addEventListener('click', showSlide);
+firstButton.addEventListener('click', showSlide);
+nextButton.addEventListener('click', showSlide);
+lastButton.addEventListener('click', showSlide);
 updateSliderNav();  
 
 function updateSliderNav() {
     if (activeSlide.previousElementSibling) {
-        // prevButton.disabled = false;
-        prevButton.addEventListener('click', showSlide);
         prevButton.classList.remove('disabled');
-
-        // firstButton.disabled = false;
-        firstButton.addEventListener('click', showSlide);
         firstButton.classList.remove('disabled');
     } else {
-        // prevButton.disabled = true;
-        prevButton.removeEventListener('click', showSlide);
         prevButton.classList.add('disabled');
-
-        // firstButton.disabled = true;
         firstButton.classList.add('disabled');
     }
 
 
     if (activeSlide.nextElementSibling) {
-        // nextButton.disabled = false;
-        nextButton.addEventListener('click', showSlide);
         nextButton.classList.remove('disabled');
-
-        // lastButton.disabled = false;
-        lastButton.addEventListener('click', showSlide);
         lastButton.classList.remove('disabled');
     } else {
-        // nextButton.disabled = true;
-        nextButton.removeEventListener('click', showSlide);
         nextButton.classList.add('disabled');
-
-        // lastButton.disabled = true;
         lastButton.classList.add('disabled');
     }
 }
 
 function showSlide(event) {
     activeSlide.classList.remove('slide-current');
-    switch (event.target) {
+    const disabled = event.currentTarget.classList.contains('disabled');
+    switch (event.currentTarget) {
         case prevButton:
-            activeSlide = activeSlide.previousElementSibling;
+            if (!disabled) {
+                activeSlide = activeSlide.previousElementSibling;
+            }
             break;
+
         case nextButton:
-            activeSlide = activeSlide.nextElementSibling;
+            if (!disabled) {
+                activeSlide = activeSlide.nextElementSibling;
+            }
             break;
+
         case firstButton:
-            activeSlide = activeSlide.parentElement.firstElementChild;
+            if (!disabled) {
+                activeSlide = activeSlide.parentElement.firstElementChild;
+            }
             break;
+
         case lastButton:
-            activeSlide = activeSlide.parentElement.lastElementChild;
+            if (!disabled) {
+                activeSlide = activeSlide.parentElement.lastElementChild;
+            }
             break;
     }
     activeSlide.classList.add('slide-current');
