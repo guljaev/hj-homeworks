@@ -29,24 +29,72 @@ xhrSizes.addEventListener('load', () => {
 document.getElementById('AddToCartForm').addEventListener('submit', (event) => {
     event.preventDefault();
     const xhrCart = new XMLHttpRequest();
-    const fd = {};
-    for ( const [key, value] of new FormData( document.getElementById('AddToCartForm') ) ) {
-        fd[key] = value;
-    }
-    fd.productId = document.getElementById('AddToCartForm').dataset.productId;
-    // console.log(fd);
+    const fd = new FormData( document.getElementById('AddToCartForm') );
+    fd.append('productId', document.getElementById('AddToCartForm').dataset.productId);
+    // const fd = {};
+    // for ( const [key, value] of new FormData( document.getElementById('AddToCartForm') ) ) {
+    //     fd[key] = value;
+    // }
+    // fd.productId = document.getElementById('AddToCartForm').dataset.productId;
+    // почему во второй и третьей задаче в условии не описано, в каком виде отсылать данные на сервер???
+
+    // const obj = {};
+    // for (const [key, value] of fd) {
+    //     obj[key] = value;
+    // }
+    // console.log(obj);
 
     xhrCart.addEventListener('load', () => {
         treatRequestResponse(xhrCart, showCart);
     });
     xhrCart.open('POST', 'https://neto-api.herokuapp.com/cart');
-    xhrCart.setRequestHeader('Content-Type', 'application/json');
-    xhrCart.send(JSON.stringify(fd));
+    // xhrCart.setRequestHeader('Content-Type', 'application/json');
+    // xhrCart.send(JSON.stringify(fd));
+    xhrCart.send(fd);
 });
 
 
 function showCart(cart) {
     console.log(cart);
+    let cartHTML = '';
+    let cost = 0;
+    for (const item of cart) {
+        cost += item.quantity * item.price;
+        cartHTML += `
+        <div class="quick-cart-product quick-cart-product-static" id="quick-cart-product-${item.id}" style="opacity: 1;">
+            <div class="quick-cart-product-wrap">
+                <img src=${item.pic} title=${item.title}>
+                <span class="s1" style="background-color: #000; opacity: .5">$800.00</span>
+                <span class="s2"></span>
+            </div>
+            <span class="count hide fadeUp" id="quick-cart-product-count-${item.id}">${item.quantity}</span>
+            <span class="quick-cart-product-remove remove" data-id=${item.id}></span>
+        </div>`;
+    }
+    cartHTML += `
+    <a id="quick-cart-pay" quickbeam="cart-pay" class="cart-ico ${cart.length === 0 ? '' : 'open'}">
+        <span>
+            <strong class="quick-cart-text">Оформить заказ<br></strong>
+            <span id="quick-cart-price">${cost}</span>
+        </span>
+    </a>`;
+    document.querySelector('#quick-cart').innerHTML = cartHTML;
+
+    // realizing remove item from cart
+    Array.from( document.querySelectorAll('.quick-cart-product-remove') ).forEach(removeButton => {
+        removeButton.addEventListener('click', (event) => {
+            console.log('remove');
+            const xhrRemove = new XMLHttpRequest();
+            const fd = new FormData();
+            fd.append('productId', event.currentTarget.dataset.id);
+
+            xhrRemove.addEventListener('load', () => {
+                treatRequestResponse(xhrRemove, showCart);
+            });
+            xhrRemove.open('POST', 'https://neto-api.herokuapp.com/cart/remove');
+            xhrRemove.send(fd);
+        });
+    });
 }
 
 function showColors(colors) {
@@ -111,12 +159,16 @@ function treatRequestResponse(request, callback) {
             throw new Error(response.message);
         } 
         callback(response);
-
     } catch (err) {
         console.log(`Произошла ошибка ${err.name}: ${err.message}`);
     }
 }
 
-
-
-
+// Вопросы
+// 1. Почему, если после загрузки страницы, я не меняю размер и цвет, а сразу нажимаю "положить в корзину", 
+// сервер возвращает мне данные корзины без значение color и size
+// хотя по умолчанию атрибут checked стоит на определенных инпутах?
+// update: как-то эта проблема разрешилась сама собой, когда я дописал вторую часть корзины. За счет чего, не понял.
+// 2. Почему если я пытаюсь выставить атрибуты checked с помощью свойства input.checked = true, то
+// этот атрибут не удаляется с предыдущих инпутов (получается как-будто выбрано несколько размеров одновременно, например)
+// 3. Почему в условии задачи явно не указано в каком виде передавать данные на сервер? Подразумевается, что нужно перебрать все варианты?
