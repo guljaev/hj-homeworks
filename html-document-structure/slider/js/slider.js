@@ -56,31 +56,27 @@ function updateSliderNav() {
 }
 
 function showSlide(event) {
+    const btnDisabled = event.currentTarget.classList.contains('disabled');
+    if (btnDisabled) {
+        return;
+    }
+
     activeSlide.classList.remove('slide-current');
-    const disabled = event.currentTarget.classList.contains('disabled');
     switch (event.currentTarget) {
         case prevButton:
-            if (!disabled) {
                 activeSlide = activeSlide.previousElementSibling;
-            }
             break;
 
         case nextButton:
-            if (!disabled) {
                 activeSlide = activeSlide.nextElementSibling;
-            }
             break;
 
         case firstButton:
-            if (!disabled) {
                 activeSlide = activeSlide.parentElement.firstElementChild;
-            }
             break;
 
         case lastButton:
-            if (!disabled) {
                 activeSlide = activeSlide.parentElement.lastElementChild;
-            }
             break;
     }
     activeSlide.classList.add('slide-current');
