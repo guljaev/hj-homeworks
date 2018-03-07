@@ -7,9 +7,10 @@ function randName() {
 function showLoadUserData(data) {
     console.log(data);
     document.querySelector('[data-name]').textContent = data.name;
+    document.querySelector('[data-pic]').src = data.pic;
     document.querySelector('[data-description]').textContent = data.description;
     document.querySelector('[data-position]').textContent = data.position;
-    document.querySelector('[data-pic]').src = data.pic;
+    
     return data.id;
 }
 
@@ -38,7 +39,8 @@ loadData('https://neto-api.herokuapp.com/profile/me')
     .then(id => loadData(`https://neto-api.herokuapp.com/profile/${id}/technologies`))
     .then(showLoadUserTechData)
     .then(document.querySelector('.content').style = 'display: initial; ')
-    .catch(err => console.log(err))
+    .catch(err => console.log(err));
     
 // Вопрос:
-// почему фотография сузилась? (
+// почему при загрузке фотография 120*120, а если обновить страницу (F5), 
+// фотография получается непропорционально заужена?
