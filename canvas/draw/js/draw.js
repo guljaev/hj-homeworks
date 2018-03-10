@@ -124,13 +124,23 @@ canvas.addEventListener('dblclick', () => {
 });
 
 window.addEventListener('resize', () => {
-    canvas.width = document.documentElement.clientWidth;
-    canvas.height = document.documentElement.clientHeight;
+    updateCanvasSize();
     curves = [];
     needsRepaint = true;
 });
 
 // rendering
+function updateCanvasSize() {
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
+    // canvas.width = window.innerWidth;
+    // canvas.height = window.innerHeight;
+    // canvas.width = document.body.clientWidth;
+    // canvas.height = document.body.clientHeight;
+    // canvas.style.width = document.documentElement.clientWidth + 'px';
+    // canvas.style.height = document.documentElement.clientHeight + 'px';
+}
+
 function repaint() {
     // clear before repainting
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -158,7 +168,6 @@ function tick() {
 }
 
 
-canvas.width = document.documentElement.clientWidth;
-canvas.height = document.documentElement.clientHeight;
+updateCanvasSize();
 tick();
 
