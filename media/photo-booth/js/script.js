@@ -26,7 +26,8 @@ navigator.mediaDevices
                 canvas.height = videoEl.videoHeight;
                 ctx.drawImage(videoEl, 0, 0);
                 audio.play();
-                createImage(canvas.toDataURL());
+                const src = canvas.toDataURL();
+                createImage(src, canvas);
             });
         });
     })
@@ -36,7 +37,7 @@ navigator.mediaDevices
         document.querySelector('#error-message').textContent = 'Ошибка доступа к камере!! ' + err;
     });
 
-function createImage(src) {
+function createImage(src, canvas) {
     const figure = document.createElement('figure');
     figure.innerHTML = `
     <img src="${src}">
@@ -55,17 +56,35 @@ function createImage(src) {
     });
 
     figure.querySelectorAll('.material-icons')[1].addEventListener('click', () => {
+
+        // canvas.toBlob(blob => {
+        //     const formData = new FormData();
+        //     formData.append('image', blob);
+        //     fetch('https://neto-api.herokuapp.com/photo-booth', {
+        //         body: formData,
+        //         credentials: 'same-origin',
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'multipart/form-data'
+        //         }
+        //     })
+        //     .then(res => {
+        //         if (res.status >= 400) throw res.statusText;
+        //         return res.json();
+        //     })
+        //     // .then(res => res.json())
+        //     .then(res => console.log(res))
+        //     .catch(err => {
+        //         console.log(err);
+        //         document.querySelector('#error-message').style.display = 'block';
+        //         document.querySelector('#error-message').textContent = 'Ошибка: ' + err;
+        //     });
+        //     console.log(formData);
+        // });
+
         const formData = new FormData();
         formData.append('image', src);
-        console.log(formData);
-
-        // const xhr = new XMLHttpRequest();
-        // xhr.open('POST', 'https://neto-api.herokuapp.com/photo-booth');
-        // xhr.addEventListener('load', () => {
-        //     console.log(xhr.response);
-        // });
-        // xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-        // xhr.send(formData);
+        console.log(formData); 
 
         fetch('https://neto-api.herokuapp.com/photo-booth', {
             body: formData,
@@ -86,5 +105,16 @@ function createImage(src) {
             document.querySelector('#error-message').style.display = 'block';
             document.querySelector('#error-message').textContent = 'Ошибка: ' + err;
         });
+
+        // const xhr = new XMLHttpRequest();
+        // xhr.open('POST', 'https://neto-api.herokuapp.com/photo-booth');
+        // xhr.addEventListener('load', () => {
+        //     console.log(xhr.response);
+        // });
+        // xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+        // xhr.send(formData);
     });
 }
+
+// При отправке POST запроса от сервера приходит ошибка 500 (Internal Server Error)
+// что не так, не могу разобраться (
