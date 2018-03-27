@@ -57,54 +57,54 @@ function createImage(src, canvas) {
 
     figure.querySelectorAll('.material-icons')[1].addEventListener('click', () => {
 
-        // canvas.toBlob(blob => {
-        //     const formData = new FormData();
-        //     formData.append('image', blob);
-        //     fetch('https://neto-api.herokuapp.com/photo-booth', {
-        //         body: formData,
-        //         credentials: 'same-origin',
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'multipart/form-data'
-        //         }
-        //     })
-        //     .then(res => {
-        //         if (res.status >= 400) throw res.statusText;
-        //         return res.json();
-        //     })
-        //     // .then(res => res.json())
-        //     .then(res => console.log(res))
-        //     .catch(err => {
-        //         console.log(err);
-        //         document.querySelector('#error-message').style.display = 'block';
-        //         document.querySelector('#error-message').textContent = 'Ошибка: ' + err;
-        //     });
-        //     console.log(formData);
-        // });
-
-        const formData = new FormData();
-        formData.append('image', src);
-        console.log(formData); 
-
-        fetch('https://neto-api.herokuapp.com/photo-booth', {
-            body: formData,
-            credentials: 'same-origin',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-        .then(res => {
-            if (res.status >= 400) throw res.statusText;
-            return res.json();
-        })
-        // .then(res => res.json())
-        .then(res => console.log(res))
-        .catch(err => {
-            console.log(err);
-            document.querySelector('#error-message').style.display = 'block';
-            document.querySelector('#error-message').textContent = 'Ошибка: ' + err;
+        canvas.toBlob(blob => {
+            const formData = new FormData();
+            formData.append('image', blob);
+            fetch('https://neto-api.herokuapp.com/photo-booth', {
+                body: formData,
+                credentials: 'same-origin',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(res => {
+                if (res.status >= 400) throw res.statusText;
+                return res.json();
+            })
+            // .then(res => res.json())
+            .then(res => console.log(res))
+            .catch(err => {
+                console.log(err);
+                document.querySelector('#error-message').style.display = 'block';
+                document.querySelector('#error-message').textContent = 'Ошибка: ' + err;
+            });
+            console.log(formData);
         });
+
+        // const formData = new FormData();
+        // formData.append('image', src);
+        // console.log(formData); 
+
+        // fetch('https://neto-api.herokuapp.com/photo-booth', {
+        //     body: formData,
+        //     credentials: 'same-origin',
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data'
+        //     }
+        // })
+        // .then(res => {
+        //     if (res.status >= 400) throw res.statusText;
+        //     return res.json();
+        // })
+        // // .then(res => res.json())
+        // .then(res => console.log(res))
+        // .catch(err => {
+        //     console.log(err);
+        //     document.querySelector('#error-message').style.display = 'block';
+        //     document.querySelector('#error-message').textContent = 'Ошибка: ' + err;
+        // });
 
         // const xhr = new XMLHttpRequest();
         // xhr.open('POST', 'https://neto-api.herokuapp.com/photo-booth');
