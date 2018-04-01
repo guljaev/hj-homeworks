@@ -2,8 +2,8 @@
 
 const PI = Math.PI;
 const canvas = document.querySelector('#wall');
-const width = canvas.width;
-const height = canvas.height;
+const width = canvas.width = +window.getComputedStyle(canvas).width.slice(0, -2);
+const height = canvas.height = +window.getComputedStyle(canvas).height.slice(0, -2);
 // console.log(width, height);
 const ctx = canvas.getContext('2d');
 ctx.strokeStyle = 'white';
